@@ -1,0 +1,16 @@
+
+body{
+    background-image: url("/imgs/adminbg.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+}
+#left_nav{
+    width: 330px;
+    height: 100%;
+    float: left;
+}
+#main{
+    width: 80%;
+    height: 900px;
+    float: left;
+}
