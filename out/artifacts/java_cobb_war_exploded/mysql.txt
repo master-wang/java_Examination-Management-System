@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `grade`(
 `u_id` INT,
 `i_id` INT,
 `grade` VARCHAR(30)  NULL,
+`mianshi` VARCHAR(30)  NULL DEFAULT 'false',
 PRIMARY KEY ( `g_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -306,6 +306,33 @@
             </div>
         </div>
     </div>
+
+    <!-- 添加面试成绩-->
+    <!-- Modal -->
+    <div class="modal fade" id="myModalmianshi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabelmianshi">添加面试成绩</h4>
+                </div>
+                <div class="modal-body">
+                    <label style="font-size: 20px;color: white">面试成绩</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" >@</span>
+                        <input type="hidden" id="mianshi_id">
+                        <input type="text" id="mianshi_grade" class="form-control" placeholder="面试成绩" aria-describedby="basic-addon1">
+                    </div>
+                    <br>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
     <script>
         $(".jumb_cp").click(function() {
@@ -628,6 +655,8 @@
                         <td>身份证</td>
                         <td>电话</td>
                         <td>分数</td>
+                        <td>面试成绩</td>
+                        <td>操作</td>
                     </tr>`;
                 for(var i =0;i<boKaoList.length;i++){
                     str += `<tr>
@@ -639,12 +668,42 @@
                     <td>`+boKaoList[i].idCardNo+`</td>
                     <td>`+boKaoList[i].phone+`</td>
                     <td>`+boKaoList[i].grade+`</td>
+                    <td>`+boKaoList[i].mianshi+`</td>
+                    <td><button type="button" class="btn btn-info"  data-toggle="modal" data-target="#myModalmianshi" uid="`+boKaoList[i].g_id+`">添加面试成绩</button></td>
                     </tr>`
                 }
                 str+=`</table>`;
                 $("#gradeList").html(str)
             },"json")
         }
+
+        $(document).on("click","#gradeList .btn-info",function () {
+            var g_id =$(this).attr("uid")
+            $("#mianshi_id").val(g_id);
+            console.log("添加面试成绩的id为："+g_id)
+            $.get("${pageContext.request.contextPath}/GradeGetGrade",{g_id :g_id},function (data) {
+                console.log(data);
+                $("#mianshi_grade").val(data.agrade[0].mianshi)
+
+
+            },"json")
+
+        })
+        $(document).on("click","#myModalmianshi .btn-primary",function () {
+            var g_id =$("#mianshi_id").val()
+            var mianshi = $("#mianshi_grade").val()
+            if(mianshi==""){
+                alert("面试成绩不能为空！")
+                return
+            }
+            $.get("${pageContext.request.contextPath}/GradeUpdateMianshi",{g_id :g_id,mianshi:mianshi},function (data) {
+                console.log(data);
+                alert("添加面试成功！")
+                return  getGradeList()
+
+            },"json")
+
+        })
     </script>
 </body>
 </html>

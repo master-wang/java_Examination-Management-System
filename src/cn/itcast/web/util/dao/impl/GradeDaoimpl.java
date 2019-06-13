@@ -50,8 +50,41 @@ public class GradeDaoimpl implements GradeDao {
     @Override
     public List getGradeList() {
         try{
-            String sql = "select school,project,`title`,`name`,idCardNo,phone,grade from `grade`,test_list,test_list_item,`user` where grade.u_id=`user`.`id` and `grade`.i_id=test_list_item.I_id and test_list_item.T_id=test_list.T_id";
+            String sql = "select g_id,school,project,`title`,`name`,idCardNo,phone,grade,mianshi from `grade`,test_list,test_list_item,`user` where grade.u_id=`user`.`id` and `grade`.i_id=test_list_item.I_id and test_list_item.T_id=test_list.T_id";
             List<Map<String, Object>> list = template.queryForList(sql);
+            System.out.println(list);
+            return list;
+        }catch (DataAccessException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List getGradeById(int g_id ) {
+        try{
+            String sql ="select * from `grade` where g_id = ?  ";
+            List<Map<String, Object>> list = template.queryForList(sql,g_id);
+            System.out.println(list);
+            return list;
+        }catch (DataAccessException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void gradeUpdateMianshi(int g_id, String mianshi) {
+        String sql ="update `grade` set mianshi = ?  where g_id = ?";
+        int count = template.update(sql,mianshi,g_id);
+        System.out.println("更新面试成绩："+count);
+    }
+
+    @Override
+    public List getGradeByUser(int i_id, int u_id) {
+        try{
+            String sql ="select * from `grade` where i_id = ? and u_id=? ";
+            List<Map<String, Object>> list = template.queryForList(sql,i_id,u_id);
             System.out.println(list);
             return list;
         }catch (DataAccessException e){

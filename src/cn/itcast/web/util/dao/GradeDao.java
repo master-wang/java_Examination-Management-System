@@ -14,4 +14,10 @@ public interface GradeDao {
     List getGradeInfo(int u_id, int i_id);
 
     List getGradeList();
+
+    List getGradeById(int parseInt);
+
+    void gradeUpdateMianshi(int parseInt, String mianshi);
+
+    List getGradeByUser(int parseInt, int parseInt1);
 }

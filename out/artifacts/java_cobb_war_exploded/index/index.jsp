@@ -149,6 +149,26 @@
             </div>
         </div>
     </div>
+    <!-- 查询面试成绩！-->
+    <!-- Modal -->
+    <div class="modal fade" id="myModalmianshi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabelmianshi">查看面试成绩</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="mianshi_grade_seach" style="font-size: 20px;color: black">面试成绩</div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         var userInfo = JSON.parse(window.localStorage.getItem("userInfo"))
@@ -257,7 +277,9 @@
                     <td>`+boKaoList[i].project+`</td>
                     <td>
 
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalbotestView" uid="`+boKaoList[i].T_id+`" sc="`+boKaoList[i].school+`" pro="`+boKaoList[i].project+`">参加考试</button></td>
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalbotestView" uid="`+boKaoList[i].T_id+`" sc="`+boKaoList[i].school+`" pro="`+boKaoList[i].project+`">参加考试</button>
+
+</td>
                 </tr>`
                 }
                 str+=`</table>`;
@@ -278,9 +300,23 @@
                 var list = data.list;
                 var str = ``;
                 for(var i=0;i<list.length;i++){
-                    str+=`<li class="list-group-item">`+list[i].title+`  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalbotestViewadd_shiti" uid="`+list[i].I_id+`">考试</button>   </li>`
+                    str+=`<li class="list-group-item">`+list[i].title+`  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalbotestViewadd_shiti" uid="`+list[i].I_id+`">考试</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalmianshi"  uid="`+list[i].I_id+`">查看面试成绩</button>
+                </li>`
                 }
                 $("#myModalbotestView .list-group").html(str)
+            },"json")
+        })
+        $(document).on("click","#myModalbotestView .btn-primary",function () {
+            var I_id =$(this).attr("uid")
+            var u_id = userInfo.id
+            $.get("${pageContext.request.contextPath}/getGradeByUser",{i_id :I_id,u_id:u_id},function (data) {
+                console.log(data,"ok");
+                console.log(data.agrade[0].mianshi)
+                $("#mianshi_grade_seach").html("你的面试成绩为："+data.agrade[0].mianshi);
+                setTimeout(function () {
+                    $("#mianshi_grade_seach").html("重新获取，面试成绩！");
+                },1000)
             },"json")
         })
         $(document).on("click","#myModalbotestView .btn-info",function () {
@@ -293,14 +329,19 @@
                 count = data.count
                 console.log(data.count != 0||data.list.length==0)
                 if (data.count != 0||data.list.length==0){
-                    $("#myModalbotestViewadd_shiti .list-group").html("你已经考过试了！ 分数为："+data.agrade[0].grade+"分！")
+                    if(data.list.length==0){
+                        $("#myModalbotestViewadd_shiti .list-group").html("试卷还未出来，耐心等候！")
+                    }else{
+                        $("#myModalbotestViewadd_shiti .list-group").html("你已经考过试了！ 分数为："+data.agrade[0].grade+"分！")
+                    }
+
                     $("#myModalbotestViewadd_shiti .btn-primary").hide()
                     return
                 }
                 $("#myModalbotestViewadd_shiti .btn-primary").show()
             },"json")
 
-            $.get("${pageContext.request.contextPath}/bokaoTestListShitiList",{id :I_id},function (data) {
+            $.get("${pageContext.request.contextPath}/bokaoTestListShitiList",{id :I_id,u_id:u_id},function (data) {
                 console.log(data,"bokaoTestList");
                 var list = data.list;
                 console.log(list.length==0)
@@ -308,7 +349,7 @@
                     $("#myModalbotestViewadd_shiti .list-group").html("试卷还未出来，耐心等候！")
                     $("#myModalbotestViewadd_shiti .btn-primary").hide()
                     return
-                }else {
+                }else if (data.count == 0){
                     $("#myModalbotestViewadd_shiti .btn-primary").show()
                     RightanswerArr = data.list;
                     var str = ``;
@@ -316,6 +357,15 @@
                         str+=`<li class="list-group-item">描述：`+list[i].title+`  选项A:`+list[i].secA+`  选项B:`+list[i].secB+`  选项C:`+list[i].secC+` -------答案：<input type="text"></li>`
                     }
                     $("#myModalbotestViewadd_shiti .list-group").html(str)
+                } else{
+                    if(data.count!=0){
+                        $("#myModalbotestViewadd_shiti .list-group").html("你已经考过试了！ 分数为："+data.agrade[0].grade+"分！")
+                    }else {
+                        $("#myModalbotestViewadd_shiti .list-group").html("你已经考过试了！ 分数为：分！")
+                    }
+
+                    $("#myModalbotestViewadd_shiti .btn-primary").hide()
+                    return
                 }
 
             },"json")

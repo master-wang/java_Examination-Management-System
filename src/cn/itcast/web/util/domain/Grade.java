@@ -5,6 +5,15 @@ public class Grade {
     private int u_id;
     private int i_id;
     private String grade;
+    private String mianshi;
+
+    public String getMianshi() {
+        return mianshi;
+    }
+
+    public void setMianshi(String mianshi) {
+        this.mianshi = mianshi;
+    }
 
     public int getI_id() {
         return i_id;
@@ -45,6 +54,7 @@ public class Grade {
                 ", u_id=" + u_id +
                 ", i_id=" + i_id +
                 ", grade='" + grade + '\'' +
+                ", mianshi='" + mianshi + '\'' +
                 '}';
     }
 }

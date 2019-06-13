@@ -1,6 +1,7 @@
 package cn.itcast.web.util.domain;
 
 public class GradeList {
+    private int g_id;
     private String school;
     private String project;
     private String title;
@@ -8,6 +9,14 @@ public class GradeList {
     private String idCardNo;
     private String phone;
     private String grade;
+
+    public int getG_id() {
+        return g_id;
+    }
+
+    public void setG_id(int g_id) {
+        this.g_id = g_id;
+    }
 
     public String getTitle() {
         return title;
@@ -68,7 +77,8 @@ public class GradeList {
     @Override
     public String toString() {
         return "GradeList{" +
-                "school='" + school + '\'' +
+                "g_id=" + g_id +
+                ", school='" + school + '\'' +
                 ", project='" + project + '\'' +
                 ", title='" + title + '\'' +
                 ", name='" + name + '\'' +
